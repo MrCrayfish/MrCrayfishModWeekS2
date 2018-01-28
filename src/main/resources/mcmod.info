@@ -1,0 +1,16 @@
+[
+{
+  "modid": "template",
+  "name": "Template Mod",
+  "description": "A mod developed during Mod Week Season 2. <description>",
+  "version": "1.0",
+  "mcversion": "1.12.2",
+  "url": "https://mrcrayfish.com",
+  "updateUrl": "",
+  "authorList": ["MrCrayfish"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

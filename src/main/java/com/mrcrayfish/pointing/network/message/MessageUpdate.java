@@ -47,6 +47,7 @@ public class MessageUpdate implements IMessage, IMessageHandler<MessageUpdate, I
         if(entity instanceof EntityPlayer)
         {
             entity.getEntityData().setBoolean("pointing", message.pointing);
+            entity.ignoreFrustumCheck = message.pointing;
         }
         return null;
     }

@@ -23,9 +23,5 @@ public class PointingMod
         PacketHandler.init();
 
         //SHow ball in first person
-        //Render ball if player not in view
-        //Make it so you cn hit entities
-        //Fix laggy positioning
-        //Smooth changed looking position
     }
 }

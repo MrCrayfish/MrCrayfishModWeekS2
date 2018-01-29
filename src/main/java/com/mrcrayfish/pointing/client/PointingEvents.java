@@ -1,5 +1,6 @@
 package com.mrcrayfish.pointing.client;
 
+import com.mrcrayfish.pointing.Config;
 import com.mrcrayfish.pointing.client.model.ModelPlayerOverride;
 import com.mrcrayfish.pointing.network.PacketHandler;
 import com.mrcrayfish.pointing.network.message.MessagePoint;
@@ -69,6 +70,9 @@ public class PointingEvents
     @SubscribeEvent
     public void onPlayerPreRender(RenderLivingEvent.Pre event)
     {
+        if(!Config.isBallEnabled())
+            return;
+
         Entity entityIn = event.getEntity();
         if(entityIn instanceof EntityPlayer && entityIn.getEntityData().getBoolean("pointing"))
         {
@@ -84,7 +88,7 @@ public class PointingEvents
                     GlStateManager.translate(rayTraceResult.hitVec.x - viewEntity.posX, rayTraceResult.hitVec.y - viewEntity.posY, rayTraceResult.hitVec.z - viewEntity.posZ);
                     GlStateManager.disableLighting();
                     GlStateManager.disableTexture2D();
-                    GlStateManager.color(182F / 255F, 255F / 255F, 103F / 255F);
+                    GlStateManager.color(Config.getBallColorRed() / 255F, Config.getBallColorGreen() / 255F, Config.getBallColorBlue() / 255F);
                     SPHERE.draw(0.25F, 20, 20);
 
                     GlStateManager.enableLighting();
@@ -96,7 +100,7 @@ public class PointingEvents
                     float viewX = manager.playerViewY;
                     float viewY = manager.playerViewX;
                     boolean thirdPerson = manager.options.thirdPersonView == 2;
-                    EntityRenderer.drawNameplate(Minecraft.getMinecraft().fontRenderer, TextFormatting.GREEN + ((EntityPlayer) entityIn).getDisplayNameString(), 0, 0.5F, 0, 0, viewX, viewY, thirdPerson, entityIn.isSneaking());
+                    EntityRenderer.drawNameplate(Minecraft.getMinecraft().fontRenderer, ((EntityPlayer) entityIn).getDisplayNameString(), 0, 0.5F, 0, 0, viewX, viewY, thirdPerson, entityIn.isSneaking());
 
                     GlStateManager.enableTexture2D();
                 }

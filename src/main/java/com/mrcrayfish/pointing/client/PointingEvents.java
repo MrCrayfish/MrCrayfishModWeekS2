@@ -76,16 +76,29 @@ public class PointingEvents
         Entity entityIn = event.getEntity();
         if(entityIn instanceof EntityPlayer && entityIn.getEntityData().getBoolean("pointing"))
         {
-            RayTraceResult rayTraceResult = entityIn.rayTrace(50.0, 0.0F);
+            RayTraceResult rayTraceResult = entityIn.rayTrace(50.0, event.getPartialRenderTick());
             if(rayTraceResult != null)
             {
+                double prevPointX = entityIn.getEntityData().getDouble("prevPointX");
+                double prevPointY = entityIn.getEntityData().getDouble("prevPointY");
+                double prevPointZ = entityIn.getEntityData().getDouble("prevPointZ");
+
                 GlStateManager.pushMatrix();
                 {
                     Entity viewEntity = Minecraft.getMinecraft().getRenderViewEntity();
+                    double viewEntityX = viewEntity.prevPosX + (viewEntity.posX - viewEntity.prevPosX) * event.getPartialRenderTick();
+                    double viewEntityY = viewEntity.prevPosY + (viewEntity.posY - viewEntity.prevPosY) * event.getPartialRenderTick();
+                    double viewEntityZ = viewEntity.prevPosZ + (viewEntity.posZ - viewEntity.prevPosZ) * event.getPartialRenderTick();
+
+                    double pointX = prevPointX + (rayTraceResult.hitVec.x - prevPointX) * event.getPartialRenderTick();
+                    double pointY = prevPointY + (rayTraceResult.hitVec.y - prevPointY) * event.getPartialRenderTick();
+                    double pointZ = prevPointZ + (rayTraceResult.hitVec.z - prevPointZ) * event.getPartialRenderTick();
+
+                    //double lookingPointX = (pointX - viewEntityX)
 
                     GlStateManager.disableAlpha();
                     GlStateManager.disableBlend();
-                    GlStateManager.translate(rayTraceResult.hitVec.x - viewEntity.posX, rayTraceResult.hitVec.y - viewEntity.posY, rayTraceResult.hitVec.z - viewEntity.posZ);
+                    GlStateManager.translate(pointX - viewEntityX, pointY - viewEntityY, pointZ - viewEntityZ);
                     GlStateManager.disableLighting();
                     GlStateManager.disableTexture2D();
                     GlStateManager.color(Config.getBallColorRed() / 255F, Config.getBallColorGreen() / 255F, Config.getBallColorBlue() / 255F);
@@ -105,6 +118,10 @@ public class PointingEvents
                     GlStateManager.enableTexture2D();
                 }
                 GlStateManager.popMatrix();
+
+                entityIn.getEntityData().setDouble("prevPointX", rayTraceResult.hitVec.x);
+                entityIn.getEntityData().setDouble("prevPointY", rayTraceResult.hitVec.y);
+                entityIn.getEntityData().setDouble("prevPointZ", rayTraceResult.hitVec.z);
             }
         }
     }

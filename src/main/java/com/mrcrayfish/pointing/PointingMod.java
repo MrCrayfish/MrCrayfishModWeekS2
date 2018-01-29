@@ -21,7 +21,5 @@ public class PointingMod
         proxy.preInit(event);
 
         PacketHandler.init();
-
-        //SHow ball in first person
     }
 }

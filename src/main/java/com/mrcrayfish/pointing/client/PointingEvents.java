@@ -82,7 +82,7 @@ public class PointingEvents
         if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !Config.isBallEnabled())
             return;
 
-        renderBall(Minecraft.getMinecraft().player, 0F);
+        renderBall(Minecraft.getMinecraft().player, 1.0F);
     }
 
     private void renderBall(Entity entityIn, float partialTicks)

@@ -14,11 +14,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.util.glu.Sphere;
 
 import java.util.Map;
@@ -73,10 +73,23 @@ public class PointingEvents
         if(!Config.isBallEnabled())
             return;
 
-        Entity entityIn = event.getEntity();
-        if(entityIn instanceof EntityPlayer && entityIn.getEntityData().getBoolean("pointing"))
+        renderBall(event.getEntity(), event.getPartialRenderTick());
+    }
+
+    @SubscribeEvent
+    public void onRenderFirstPerson(RenderWorldLastEvent event)
+    {
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !Config.isBallEnabled())
+            return;
+
+        renderBall(Minecraft.getMinecraft().player, 0F);
+    }
+
+    private void renderBall(Entity entityIn, float partialTicks)
+    {
+        if(entityIn != null && entityIn.getEntityData().getBoolean("pointing"))
         {
-            RayTraceResult rayTraceResult = entityIn.rayTrace(50.0, event.getPartialRenderTick());
+            RayTraceResult rayTraceResult = entityIn.rayTrace(50.0, partialTicks);
             if(rayTraceResult != null)
             {
                 double prevPointX = entityIn.getEntityData().getDouble("prevPointX");
@@ -86,13 +99,13 @@ public class PointingEvents
                 GlStateManager.pushMatrix();
                 {
                     Entity viewEntity = Minecraft.getMinecraft().getRenderViewEntity();
-                    double viewEntityX = viewEntity.prevPosX + (viewEntity.posX - viewEntity.prevPosX) * event.getPartialRenderTick();
-                    double viewEntityY = viewEntity.prevPosY + (viewEntity.posY - viewEntity.prevPosY) * event.getPartialRenderTick();
-                    double viewEntityZ = viewEntity.prevPosZ + (viewEntity.posZ - viewEntity.prevPosZ) * event.getPartialRenderTick();
+                    double viewEntityX = viewEntity.prevPosX + (viewEntity.posX - viewEntity.prevPosX) * partialTicks;
+                    double viewEntityY = viewEntity.prevPosY + (viewEntity.posY - viewEntity.prevPosY) * partialTicks;
+                    double viewEntityZ = viewEntity.prevPosZ + (viewEntity.posZ - viewEntity.prevPosZ) * partialTicks;
 
-                    double pointX = prevPointX + (rayTraceResult.hitVec.x - prevPointX) * event.getPartialRenderTick();
-                    double pointY = prevPointY + (rayTraceResult.hitVec.y - prevPointY) * event.getPartialRenderTick();
-                    double pointZ = prevPointZ + (rayTraceResult.hitVec.z - prevPointZ) * event.getPartialRenderTick();
+                    double pointX = prevPointX + (rayTraceResult.hitVec.x - prevPointX) * partialTicks;
+                    double pointY = prevPointY + (rayTraceResult.hitVec.y - prevPointY) * partialTicks;
+                    double pointZ = prevPointZ + (rayTraceResult.hitVec.z - prevPointZ) * partialTicks;
 
                     //double lookingPointX = (pointX - viewEntityX)
 

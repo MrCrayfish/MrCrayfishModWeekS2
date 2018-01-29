@@ -4,7 +4,6 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.RayTraceResult;
 
 /**
  * Author: MrCrayfish
@@ -36,9 +35,6 @@ public class ModelPlayerOverride extends ModelPlayer
                     copyModelAngles(this.bipedRightArm, this.bipedRightArmwear);
                     break;
             }
-
-
-            //RayTraceResult rayTraceResult = entityIn.rayTrace(50.0, 0F);
         }
     }
 

@@ -3,6 +3,7 @@ package com.mrcrayfish.pointing.client.model;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 
 /**
@@ -21,8 +22,21 @@ public class ModelPlayerOverride extends ModelPlayer
         super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
         if(entityIn.getEntityData().getBoolean("pointing"))
         {
-            copyModelAngles(this.bipedHead, this.bipedRightArm);
-            this.bipedRightArm.rotateAngleX += Math.toRadians(-90.0);
+            EntityPlayer player = (EntityPlayer) entityIn;
+            switch(player.getPrimaryHand())
+            {
+                case LEFT:
+                    copyModelAngles(this.bipedHead, this.bipedLeftArm);
+                    this.bipedLeftArm.rotateAngleX += Math.toRadians(-90.0);
+                    copyModelAngles(this.bipedLeftArm, this.bipedLeftArmwear);
+                    break;
+                case RIGHT:
+                    copyModelAngles(this.bipedHead, this.bipedRightArm);
+                    this.bipedRightArm.rotateAngleX += Math.toRadians(-90.0);
+                    copyModelAngles(this.bipedRightArm, this.bipedRightArmwear);
+                    break;
+            }
+
 
             //RayTraceResult rayTraceResult = entityIn.rayTrace(50.0, 0F);
         }

@@ -1,7 +1,7 @@
 [
 {
-  "modid": "template",
-  "name": "Template Mod",
+  "modid": "soccer",
+  "name": "Soccer Mod",
   "description": "A mod developed during Mod Week Season 2. <description>",
   "version": "1.0",
   "mcversion": "1.12.2",

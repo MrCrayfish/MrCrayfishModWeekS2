@@ -1,0 +1,5 @@
+{
+    "kick_ball": {
+        "sounds": [ {"name": "soccer:kick_ball"}]
+    }
+}

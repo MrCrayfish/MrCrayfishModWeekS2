@@ -77,10 +77,11 @@ public class RenderATV extends Render<EntityATV>
 
             GlStateManager.pushMatrix();
             {
+                float wheelAngle = entity.prevWheelAngle + (entity.wheelAngle - entity.prevWheelAngle) * partialTicks;
                 GlStateManager.translate(0.3, 0.13125, offsetCenter);
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.rotate(entity.getWheelAngle(), 0, 1, 0);
+                    GlStateManager.rotate(wheelAngle, 0, 1, 0);
                     if(entity.isMoving())
                     {
                         GlStateManager.rotate(-wheelSpin, 1, 0, 0);
@@ -95,7 +96,7 @@ public class RenderATV extends Render<EntityATV>
 
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.rotate(entity.getWheelAngle(), 0, 1, 0);
+                    GlStateManager.rotate(wheelAngle, 0, 1, 0);
                     if(entity.isMoving())
                     {
                         GlStateManager.rotate(-wheelSpin, 1, 0, 0);

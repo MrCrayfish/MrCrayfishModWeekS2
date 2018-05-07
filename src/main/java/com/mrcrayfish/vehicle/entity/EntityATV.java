@@ -22,10 +22,9 @@ public class EntityATV extends Entity
 {
     public static final double MAX_SPEED = 5;
     public double currentSpeed;
-    private boolean isMoving = false;
 
-    private float wheelAngle;
-    private float prevWheelAngle;
+    public float wheelAngle;
+    public float prevWheelAngle;
     public float wheelRotation;
     public float prevWheelRotation;
 
@@ -88,20 +87,12 @@ public class EntityATV extends Entity
             {
                 float speedPercent = (float) (currentSpeed / MAX_SPEED);
 
-                float turnRotation = 8F * speedPercent;
+                float turnRotation = 10F * speedPercent;
                 this.rotationYaw += entity.moveStrafing > 0 ? -turnRotation : entity.moveStrafing < 0 ? turnRotation : 0;
 
                 float wheelRotation = 45F * Math.abs(speedPercent);
-                this.wheelAngle = entity.moveStrafing > 0 ? wheelRotation : entity.moveStrafing < 0 ? -wheelRotation : 0;
-
-                if(entity.moveForward > 0)
-                {
-                    this.wheelRotation -= 50F * Math.abs(speedPercent);
-                }
-                else if(entity.moveForward < 0)
-                {
-                    this.wheelRotation += 50F * Math.abs(speedPercent);
-                }
+                this.wheelAngle = entity.moveStrafing > 0 ? wheelRotation : entity.moveStrafing < 0 ? -wheelRotation : wheelAngle * 0.65F;
+                this.wheelRotation -= (40F * speedPercent) * Math.abs(entity.moveForward);
 
                 this.moveRelative(0, 0, entity.moveForward, 0.02F);
 
@@ -119,13 +110,13 @@ public class EntityATV extends Entity
                 {
                     this.createRunningParticles();
                 }
-                if(currentSpeed > 0.5 && soundLoop % 4 == 0)
+                if(currentSpeed > 0.75 && soundLoop % 4 == 0)
                 {
                     world.playSound(posX, posY, posZ, ModSounds.DRIVING, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
                 }
             }
 
-            if(currentSpeed <= 0.5 && soundLoop % 4 == 0)
+            if(currentSpeed <= 0.75 && soundLoop % 4 == 0)
             {
                 world.playSound(posX, posY, posZ, ModSounds.IDLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
@@ -140,7 +131,10 @@ public class EntityATV extends Entity
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
     {
-        player.startRiding(this);
+        if(!world.isRemote)
+        {
+            player.startRiding(this);
+        }
         return true;
     }
 
@@ -183,11 +177,6 @@ public class EntityATV extends Entity
 
     @Override
     protected void playStepSound(BlockPos pos, Block blockIn) {}
-
-    public float getWheelAngle()
-    {
-        return wheelAngle;
-    }
 
     public boolean isMoving()
     {
